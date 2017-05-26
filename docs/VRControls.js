@@ -104,7 +104,7 @@ THREE.VRControls = function (object, onError) {
             } else if (vrDisplay.getPose) {
                 pose = vrDisplay.getPose();
             }
-            sc.send({
+            dc && dc.send(JSON.stringify({
                 update: {
                     scale: this.scale,
                     orientation: pose.orientation,
@@ -114,7 +114,7 @@ THREE.VRControls = function (object, onError) {
                 },
                 from: myId,
                 to: 'sender'
-            });
+            }));
         }
     };
 

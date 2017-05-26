@@ -4,8 +4,24 @@ var controls, effect;
 var clients = {};
 var videoDownloaded = false;
 
+/*
+debugLevel
+0: なし(例外のみ)
+1: PC各種State
+2: PC各種State + 各関数呼び出し(イベントリスナー含む。ただし、メッセージハンドラーは除外)
+3: PC各種State + 各関数呼び出し(イベントリスナー含む。ただし、メッセージハンドラーは除外) + シグナリングメッセージ
+4: PC各種State + 各関数呼び出し(イベントリスナー含む。ただし、メッセージハンドラーは除外) + シグナリングメッセージ + データチャンネルメッセージ
+*/
+var sp = new URLSearchParams(location.search);
+var debugLevel = 0;
+if (sp.get('debug')) {
+    if (!isNaN(sp.get('debug'))) {
+        debugLevel = +sp.get('debug');
+    }
+}
+
 function setupSender() {
-    console.log('setupSender');
+    if(debugLevel >= 2) console.log('setupSender');
     // video
     var video = document.createElement('video');
     video.loop = true;
@@ -41,7 +57,7 @@ function setupSender() {
 }
 
 function setupScene(video) {
-    console.log('setupScene', video);
+    if(debugLevel >= 2) console.log('setupScene', video);
     camera = new THREE.PerspectiveCamera(75, (window.innerWidth - 200) / window.innerHeight, 1, 1000);
     camera.layers.enable(1);
 
@@ -81,6 +97,7 @@ function setupScene(video) {
         document.body.appendChild(WEBVR.getButton(display, renderer.domElement));
     });
     window.onresize = function () {
+        if(debugLevel >= 2) console.log('window.onresize', `window.innerWidth:${window.innerWidth}`, `window.innerHeight:${window.innerHeight}`);
         camera.aspect = (window.innerWidth - 200) / window.innerHeight;
         camera.updateProjectionMatrix();
         effect.setSize(window.innerWidth - 200, window.innerHeight);
@@ -89,7 +106,7 @@ function setupScene(video) {
 }
 
 function addClient(remoteId, size) {
-    console.log('addClient', `remoteId:${remoteId}`, `size:w=${size.w},h=${size.h}`);
+    if(debugLevel >= 2) console.log('addClient', `remoteId:${remoteId}`, `size:w=${size.w},h=${size.h}`);
     var rend = new THREE.WebGLRenderer();
     rend.setSize(size.w, size.h);
 
@@ -125,7 +142,7 @@ function addClient(remoteId, size) {
 }
 
 function resizeClient(remoteId, size) {
-    console.log('resizeClient', `remoteId:${remoteId}`, `size:(${size.w},${size.h})`);
+    if(debugLevel >= 2) console.log('resizeClient', `remoteId:${remoteId}`, `size:(${size})`);
     var client = clients[remoteId];
     client.camera.aspect = size.w / size.h;
     client.camera.updateProjectionMatrix();
@@ -133,12 +150,13 @@ function resizeClient(remoteId, size) {
 }
 
 function setupReciever(myId) {
-    console.log('setupReciever', `myid:${myId}`);
+    if(debugLevel >= 2) console.log('setupReciever', `myid:${myId}`);
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
     controls = new THREE.VRControls(camera, err => {
         console.log(err);
     }, myId);
     window.onresize = function () {
+        if(debugLevel >= 2) console.log('window.onresize', `window.innerWidth:${window.innerWidth}`, `window.innerHeight:${window.innerHeight}`);
         if (myId) {
             sc.send({ w: window.innerWidth, h: window.innerHeight });
         }
