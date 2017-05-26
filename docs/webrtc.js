@@ -20,6 +20,7 @@ function processMessage(evt) {
             if (!myId) {
                 setupSender();
                 myIdTitle.textContent = myId = 'sender';
+                info.style.display = '';
             }
             var remoteId = 'reciever' + (remoteIdx++);
             setupPeerConnection(remoteId);
@@ -34,6 +35,7 @@ function processMessage(evt) {
         } 
     } else if (msg.reciever && !myId) {
         myIdTitle.textContent = myId = msg.reciever;
+        info.style.display = '';
         pc = setupPeerConnection('sender');
         recieverMessage.style.display = '';
         if(msg.videoDownloaded) {
@@ -141,7 +143,7 @@ function setupPeerConnection(remoteId) {
             }
             delete pcs[this.remoteId];
             if (myId === 'sender' && clients[this.remoteId]) {
-                clientList.removeChild(clients[this.remoteId].renderer.domElement);
+                clientList.removeChild(clients[this.remoteId].renderer.domElement.parentElement);
                 delete clients[this.remoteId];
             }
         }
