@@ -38,11 +38,11 @@ function processMessage(evt) {
         info.style.display = '';
         pc = setupPeerConnection('sender');
         recieverMessage.style.display = '';
+        recieverViewer.style.display = msg.videoDownloaded ? '' : 'none';
+        setupReciever(msg.ready);
         if(msg.videoDownloaded) {
             render();
         }
-        recieverViewer.style.display = msg.videoDownloaded ? '' : 'none';
-        setupReciever(msg.ready);
     } else if (msg.percentage) {
         progressBar.style.width = msg.percentage + '%';
         if (msg.percentage >= 100) {
