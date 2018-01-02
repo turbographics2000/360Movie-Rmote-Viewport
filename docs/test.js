@@ -10,9 +10,9 @@ let scene = null;
 let texture = null;
 let camera = null;
 let isStereo = false;
-const width = window.innerWidth;
-const height = window.innerHeight;
-const halfWidth = width / 2;
+let width = window.innerWidth;
+let height = window.innerHeight;
+let halfWidth = width / 2;
 window.onkeydown = evt => {
     if(evt.code === 'KeyS') isStereo = !isStereo;
 };
@@ -57,7 +57,10 @@ function stereoRender(left, top, width, height, offsetY) {
     renderer.render(scene, camera);
 }
 
- window.addEventListener('resize', evt => {
+window.addEventListener('resize', evt => {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    halfWidth = width / 2;
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
