@@ -57,3 +57,9 @@ function stereoRender(left, top, width, height, offsetY) {
     renderer.render(scene, camera);
 }
 
+ window.addEventListener('resize', evt => {
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+});
+
