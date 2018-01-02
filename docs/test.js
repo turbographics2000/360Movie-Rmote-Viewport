@@ -10,18 +10,19 @@ let scene = null;
 let texture = null;
 let camera = null;
 let isStereo = false;
+const width = window.innerWidth;
+const height = window.innerHeight;
+const halfWidth = width / 2;
 window.onkeydown = evt => {
     if(evt.code === 'KeyS') isStereo = !isStereo;
 };
 
 function setup(video) {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
     renderer = new THREE.WebGLRenderer({});
-    renderer.setSize(w, h);
+    renderer.setSize(width, height);
     document.body.appendChild(renderer.domElement);
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 10000);
+    camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
     const geometry = new THREE.SphereBufferGeometry(100, 32, 32);
     texture = new THREE.VideoTexture(video);
     texture.minFilter = THREE.LinearFilter;
@@ -37,14 +38,13 @@ function render() {
     requestAnimationFrame(render);
     if (isStereo) {
         // ステレオレンダリング
-        w /= 2;
         renderer.setScissorTest(true);
-        stereoRender(0, 0, w, h, 0.5);
-        stereoRender(w, 0, w, h, -0.5);
+        stereoRender(0, 0, halfWidth, height, 0.5);
+        stereoRender(halfWidth, 0, halfWidth, height, -0.5);
         renderer.setScissorTest(false);
     } else {
         // ノーマルレンダリング
-        renderer.setViewport(0, 0, w, h);
+        renderer.setViewport(0, 0, width, height);
         renderer.render(scene, camera);
     }    
 }
