@@ -25,7 +25,7 @@ window.onkeydown = evt => {
 
 function setup(video) {
     const width = window.innerWidth;
-    const height = window.innerheight;
+    const height = window.innerHeight;
     renderer = new THREE.WebGLRenderer({});
     stereoEffect = new THREE.StereoEffect(renderer);
     stereoEffect.setSize(width, height);
