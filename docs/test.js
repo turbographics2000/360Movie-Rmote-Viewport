@@ -7,7 +7,8 @@ video.src = 'sample.mp4';
 
 function setup(video) {
     const renderer = new THREE.WebGLRenderer({});
-    document.body.appendChild(renderer.domElmeent);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, this.ouputSize.aspectRatio, 0.1, 10000);
     const geometry = new THREE.SphereBufferGeometry(100, 32, 32);
