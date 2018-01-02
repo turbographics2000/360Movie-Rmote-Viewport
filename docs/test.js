@@ -58,8 +58,8 @@ function stereoRender(left, top, width, height, offsetY) {
 }
 
  window.addEventListener('resize', evt => {
-    renderer.setSize(width, height);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
 });
 
