@@ -41,7 +41,7 @@ function render() {
         // ステレオレンダリング
         renderer.setScissorTest(true);
         stereoRender(0, 0, halfWidth, height, 0);
-        stereoRender(halfWidth, 0, halfWidth, height, -1);
+        stereoRender(halfWidth, 0, halfWidth, height, 0.5);
         renderer.setScissorTest(false);
     } else {
         // ノーマルレンダリング
