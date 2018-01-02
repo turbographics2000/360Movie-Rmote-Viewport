@@ -40,8 +40,8 @@ function render() {
     if (isStereo) {
         // ステレオレンダリング
         renderer.setScissorTest(true);
-        stereoRender(0, 0, halfWidth, height, 0.5);
-        stereoRender(halfWidth, 0, halfWidth, height, -0.5);
+        stereoRender(0, 0, halfWidth, height, 0);
+        stereoRender(halfWidth, 0, halfWidth, height, -1);
         renderer.setScissorTest(false);
     } else {
         // ノーマルレンダリング
@@ -50,8 +50,8 @@ function render() {
     }    
 }
 
-function stereoRender(left, top, width, height, repeatY) {
-    texture.repeat.y = repeatY;
+function stereoRender(left, top, width, height, offsetY) {
+    texture.offset.y = offsetY;
     renderer.setViewport(left, top, width, height);
     renderer.setScissor(left, top, width, height);
     renderer.render(scene, camera);
