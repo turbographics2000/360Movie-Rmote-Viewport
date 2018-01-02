@@ -9,17 +9,28 @@ let renderer = null;
 let scene = null;
 let texture = null;
 let camera = null;
-let isStereo = false;
+const renderingTypes = ['normal', 'stereo', 'anaglyph'];
+let renderingTypeIndex = 0;
 let width = window.innerWidth;
 let height = window.innerHeight;
 let halfWidth = width / 2;
+let anaglyphEffect = null;
+let stereoEffect = null;
+
 window.onkeydown = evt => {
-    if(evt.code === 'KeyS') isStereo = !isStereo;
+    if(evt.code === 'KeyS') {
+        renderingTypeIndex = (renderingTypeIndex + 1) % 3;
+    }
 };
 
 function setup(video) {
+    const width = window.innerWidth;
+    const height = window.innerheight;
     renderer = new THREE.WebGLRenderer({});
-    renderer.setSize(width, height);
+    stereoEffect = new THREE.StereoEffect(renderer);
+    stereoEffect.setSize(width, height);
+    anaglyphEffect = new THREE.AnaglyphEffect(renderer);
+    anaglyphEffect.setSize(width, height);
     renderer.domElement.style.display = 'inherit';
     document.body.appendChild(renderer.domElement);
     scene = new THREE.Scene();
@@ -38,32 +49,23 @@ function setup(video) {
 
 function render() {
     requestAnimationFrame(render);
-    if (isStereo) {
-        // ステレオレンダリング
-        renderer.setScissorTest(true);
-        stereoRender(0, 0, halfWidth, height, 0);
-        stereoRender(halfWidth, 0, halfWidth, height, 0.5);
-        renderer.setScissorTest(false);
-    } else {
-        // ノーマルレンダリング
-        renderer.setViewport(0, 0, width, height);
-        renderer.render(scene, camera);
-    }    
-}
-
-function stereoRender(left, top, width, height, offsetY) {
-    texture.offset.y = offsetY;
-    renderer.setViewport(left, top, width, height);
-    renderer.setScissor(left, top, width, height);
-    renderer.render(scene, camera);
+    switch(renderingTypes[renderingTypeIndex]) {
+        case 'normal':
+            renderer.render(scene, camera);
+            break;
+        case 'stereo':
+            stereoEffect.render(scene, camera);
+            break;
+        case 'anaglyph':
+            anaglyphEffect.render(scene, camera);
+            break;
+    }
 }
 
 window.addEventListener('resize', evt => {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    halfWidth = width / 2;
-    camera.aspect = width / height;
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
+    stereoEffect.setSize(window.innerWidth, window.innerHeight);
+    anaglyphEffect.setSize(window.innerWidth, window.innerHeight);
 });
 
