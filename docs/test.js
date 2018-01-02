@@ -6,7 +6,7 @@ video.onloadedmetadata = evt => {
 video.src = 'sample.mp4';
 
 function setup(video) {
-    const renderer = new THREE.WebGLBufferRenderer({});
+    const renderer = new THREE.WebGLRenderer({});
     document.body.appendChild(renderer.domElmeent);
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, this.ouputSize.aspectRatio, 0.1, 10000);
