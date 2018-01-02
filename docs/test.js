@@ -20,7 +20,7 @@ window.onkeydown = evt => {
 function setup(video) {
     renderer = new THREE.WebGLRenderer({});
     renderer.setSize(width, height);
-    renderer.domElement.style.display = 'inherits';
+    renderer.domElement.style.display = 'inherit';
     document.body.appendChild(renderer.domElement);
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
