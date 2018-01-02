@@ -20,7 +20,7 @@ function setup(video) {
     texture.minFilter = THREE.LinearFilter;
     texture.magFilter = THREE.LinearFilter;
     texture.format = THREE.RGBFormat;
-    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSize });
+    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
     render();
