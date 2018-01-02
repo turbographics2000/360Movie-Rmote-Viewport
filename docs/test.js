@@ -15,6 +15,7 @@ function setup(video) {
     const texture = new THREE.VideoTexture(video);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSize });
     const mesh = new THREE.Mesh(geometry, material);
+    render();
 }
 
 function render() {
