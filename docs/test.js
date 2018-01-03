@@ -20,6 +20,7 @@ let stereoEffect = null;
 window.onkeydown = evt => {
     if(evt.code === 'KeyS') {
         renderingTypeIndex = (renderingTypeIndex + 1) % 3;
+        onResize();
     }
 };
 
@@ -62,10 +63,11 @@ function render() {
     }
 }
 
-window.addEventListener('resize', evt => {
+window.addEventListener('resize', onResize);
+function onResize(evt) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     stereoEffect.setSize(window.innerWidth, window.innerHeight);
     anaglyphEffect.setSize(window.innerWidth, window.innerHeight);
-});
+}
 
