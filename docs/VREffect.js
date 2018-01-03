@@ -94,7 +94,7 @@ class VREffect {
 
     onVRDisplayPresentChange() {
         const wasPresenting = this.isPresenting;
-        this.isPresenting = this.vrDisplay !== undefined && this.vrDisplay.isPresenting;
+        this.isPresenting = this.vrDisplay !== null && this.vrDisplay.isPresenting;
 
         if (this.isPresenting) {
             const eyeParamsL = this.vrDisplay.getEyeParameters('left');
@@ -115,7 +115,7 @@ class VREffect {
 
     setFullScreen(boolean) {
         return new Promise((resolve, reject) => {
-            if (this.vrDisplay === undefined) {
+            if (this.vrDisplay === null) {
                 reject(new Error('No VR hardware found.'));
                 return;
             }
@@ -142,7 +142,7 @@ class VREffect {
     }
 
     requestAnimationFrame(f) {
-        if (this.vrDisplay !== undefined) {
+        if (this.vrDisplay !== null) {
             return this.vrDisplay.requestAnimationFrame(f);
         } else {
             return window.requestAnimationFrame(f);
@@ -150,7 +150,7 @@ class VREffect {
     }
 
     cancelAnimationFrame(h) {
-        if (this.vrDisplay !== undefined) {
+        if (this.vrDisplay !== null) {
             this.vrDisplay.cancelAnimationFrame(h);
         } else {
             window.cancelAnimationFrame(h);
@@ -158,7 +158,7 @@ class VREffect {
     }
 
     submitFrame() {
-        if (this.vrDisplay !== undefined && this.isPresenting) {
+        if (this.vrDisplay !== null && this.isPresenting) {
             this.vrDisplay.submitFrame();
         }
     }
