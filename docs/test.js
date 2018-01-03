@@ -41,7 +41,7 @@ function setup(video) {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75 / 2, width / height, 0.1, 10000);
     vrControls = new THREE.VRControls(camera);
-    vrEffect   = new THREE.VREffect(true, renderer);
+    vrEffect   = new THREE.VREffect(renderer);
     const geometry = new THREE.SphereBufferGeometry(100, 32, 32);
     texture = new THREE.VideoTexture(video);
     texture.minFilter = THREE.LinearFilter;
