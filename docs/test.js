@@ -23,7 +23,7 @@ window.onkeydown = evt => {
     if(evt.code === 'KeyS') {
         renderingTypeIndex = (renderingTypeIndex + 1) % 3;
         onResize();
-    } else evt.code === 'KeyF') {
+    } else if(evt.code === 'KeyF') {
         vrEffect.setFullScreen(true);
     }
 };
