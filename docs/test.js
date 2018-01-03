@@ -18,13 +18,15 @@ let anaglyphEffect = null;
 let stereoEffect = null;
 let vrEffect = null;
 let vrControls = null;
+let isVRPresenting = false;
 
 window.onkeydown = evt => {
     if(evt.code === 'KeyS') {
         renderingTypeIndex = (renderingTypeIndex + 1) % 3;
         onResize();
     } else if(evt.code === 'KeyF') {
-        vrEffect.setFullScreen(true);
+        isVRPresenting = !isVRPresenting;
+        vrEffect.setFullScreen(isVRPreseinting);
     }
 };
 
@@ -57,7 +59,7 @@ function setup(video) {
 function render() {
     requestAnimationFrame(render);
     vrControls.update();
-    switch(renderingTypes[renderingTypeIndex]) {
+    /*switch(renderingTypes[renderingTypeIndex]) {
         case 'normal':
             renderer.render(scene, camera);
             break;
@@ -67,6 +69,11 @@ function render() {
         case 'anaglyph':
             anaglyphEffect.render(scene, camera);
             break;
+    }*/
+    if(isVRPresenting) {
+        vrEffect.render(scene, camera);
+    } else {
+        renderer.render(scene, camera);
     }
 }
 
