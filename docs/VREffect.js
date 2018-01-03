@@ -232,7 +232,7 @@ class VREffect {
                 this.cameraL.projectionMatrix.elements = this.frameData.leftProjectionMatrix;
                 this.cameraR.projectionMatrix.elements = this.frameData.rightProjectionMatrix;
 
-                this.getEyeMatrices(frameData);
+                this.getEyeMatrices(this.frameData);
 
                 this.cameraL.updateMatrix();
                 this.cameraL.matrix.multiply(this.eyeMatrixL);
