@@ -26,7 +26,7 @@ window.onkeydown = evt => {
         onResize();
     } else if(evt.code === 'KeyF') {
         isVRPresenting = !isVRPresenting;
-        vrEffect.setFullScreen(isVRPreseinting);
+        vrEffect.setFullScreen(isVRPresenting);
     }
 };
 
