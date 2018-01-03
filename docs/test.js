@@ -16,11 +16,15 @@ let height = window.innerHeight;
 let halfWidth = width / 2;
 let anaglyphEffect = null;
 let stereoEffect = null;
+let vrEffect = null;
+let vrControls = null;
 
 window.onkeydown = evt => {
     if(evt.code === 'KeyS') {
         renderingTypeIndex = (renderingTypeIndex + 1) % 3;
         onResize();
+    } else evt.code === 'KeyF') {
+        vrEffect.setFullScreen(true);
     }
 };
 
@@ -36,6 +40,8 @@ function setup(video) {
     document.body.appendChild(renderer.domElement);
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75 / 2, width / height, 0.1, 10000);
+    vrControls = new THREE.VRControls(camera);
+    vrEffect   = new THREE.VREffect(renderer);
     const geometry = new THREE.SphereBufferGeometry(100, 32, 32);
     texture = new THREE.VideoTexture(video);
     texture.minFilter = THREE.LinearFilter;
