@@ -56,6 +56,7 @@ function setup(video) {
 
 function render() {
     requestAnimationFrame(render);
+    vrControls.update();
     switch(renderingTypes[renderingTypeIndex]) {
         case 'normal':
             renderer.render(scene, camera);
