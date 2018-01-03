@@ -273,7 +273,7 @@ class VREffect {
                 this.renderer.setViewport(this.renderRectR.x, this.renderRectR.y, this.renderRectR.width, this.renderRectR.height);
                 this.renderer.setScissor(this.renderRectR.x, this.renderRectR.y, this.renderRectR.width, this.renderRectR.height);
             }
-            this.renderer.render(scene, cameraR, renderTarget, forceClear);
+            this.renderer.render(scene, this.cameraR, renderTarget, forceClear);
 
             if (renderTarget) {
                 renderTarget.viewport.set(0, 0, size.width, size.height);
