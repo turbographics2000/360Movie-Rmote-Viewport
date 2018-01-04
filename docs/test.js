@@ -75,21 +75,20 @@ function beforeRenderR() {
 function render() {
     requestAnimationFrame(render);
     vrControls.update();
-    /*switch(renderingTypes[renderingTypeIndex]) {
-        case 'normal':
-            renderer.render(scene, camera);
-            break;
-        case 'stereo':
-            stereoEffect.render(scene, camera);
-            break;
-        case 'anaglyph':
-            anaglyphEffect.render(scene, camera);
-            break;
-    }*/
     if(isVRPresenting) {
         vrEffect.render(scene, camera);
     } else {
-        renderer.render(scene, camera);
+        switch(renderingTypes[renderingTypeIndex]) {
+            case 'normal':
+                renderer.render(scene, camera);
+                break;
+            case 'stereo':
+                stereoEffect.render(scene, camera);
+                break;
+            case 'anaglyph':
+                anaglyphEffect.render(scene, camera);
+                break;
+        }
     }
 }
 
