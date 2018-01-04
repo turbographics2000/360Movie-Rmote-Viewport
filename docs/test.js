@@ -48,12 +48,6 @@ function setup(video) {
     texture.magFilter = THREE.LinearFilter;
     texture.format = THREE.RGBFormat;
     texture.repeat.y = 0.5;
-    const textureR = new THREE.VideoTexture(video);
-    textureR.minFilter = THREE.LinearFilter;
-    textureR.magFilter = THREE.LinearFilter;
-    textureR.format = THREE.RGBFormat;
-    textureR.repeat.y = 0.5;
-    textureR.offset.y = 0.5;
     anaglyphEffect = new THREE.AnaglyphEffect(renderer);
     anaglyphEffect.setSize(width, height);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
