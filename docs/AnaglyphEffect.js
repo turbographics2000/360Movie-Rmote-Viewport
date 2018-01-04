@@ -89,16 +89,20 @@ void main() {
     setSize(width, height) {
         this.renderer.setSize(width, height);
         const pixelRatio = renderer.getPixelRatio();
-        this._renderTargetL.setSize(width * pixelRatio, height * pixelRatio);
-        this._renderTargetR.setSize(width * pixelRatio, height * pixelRatio);
+        if(this._renderTargetL) {
+            this._renderTargetL.setSize(width * pixelRatio, height * pixelRatio);
+            this._renderTargetR.setSize(width * pixelRatio, height * pixelRatio);
+        }
     }
 
     render(scene, camera) {
         scene.updateMatrixWorld();
         if (camera.parent === null) camera.updateMatrixWorld();
         this._stereo.update(camera);
-        this.renderer.render(scene, this._stereo.cameraL, this._renderTargetL, true);
-        this.renderer.render(scene, this._stereo.cameraR, this._renderTargetR, true);
+        if(this._renderTargetL) {
+            this.renderer.render(scene, this._stereo.cameraL, this._renderTargetL, true);
+            this.renderer.render(scene, this._stereo.cameraR, this._renderTargetR, true);
+        }
         this.renderer.render(this._scene, this._camera);
     }
 
