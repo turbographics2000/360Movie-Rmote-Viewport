@@ -39,7 +39,7 @@ function setup(video) {
     renderer.domElement.style.display = 'inherit';
     document.body.appendChild(renderer.domElement);
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75 / 2, width / height, 0.1, 10000);
+    camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 10000);
     vrControls = new THREE.VRControls(camera);
     vrEffect   = new THREE.VREffect(renderer, vrEffectError, beforeRenderL, beforeRenderR);
     const geometry = new THREE.SphereBufferGeometry(100, 32, 32);
