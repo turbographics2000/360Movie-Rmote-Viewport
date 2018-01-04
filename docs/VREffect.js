@@ -9,59 +9,61 @@
  */
 
 class VREffect {
-    constructor(renderer, onError) {
-    this.renderer = renderer;
-    this.onError = onError;
-    this.vrDisplay = null;
-    this.vrDisplays = null;
-    this.eyeTranslationL = new THREE.Vector3();
-    this.eyeTranslationR = new THREE.Vector3();
-    this.renderRectL = null;
-    this.renderRectR = null;
-    this.headMatrix = new THREE.Matrix4();
-    this.eyeMatrixL = new THREE.Matrix4();
-    this.eyeMatrixR = new THREE.Matrix4();
+    constructor(renderer, onError, beforeRenderL = null, beforeRenderR = null) {
+        this.renderer = renderer;
+        this.onError = onError;
+        this.beforeRenderL = beforeRenderL;
+        this.beforeRenderR = beforeRenderR;
+        this.vrDisplay = null;
+        this.vrDisplays = null;
+        this.eyeTranslationL = new THREE.Vector3();
+        this.eyeTranslationR = new THREE.Vector3();
+        this.renderRectL = null;
+        this.renderRectR = null;
+        this.headMatrix = new THREE.Matrix4();
+        this.eyeMatrixL = new THREE.Matrix4();
+        this.eyeMatrixR = new THREE.Matrix4();
 
-    this.frameData = 'VRFrameData' in window ? new window.VRFrameData() : null;
+        this.frameData = 'VRFrameData' in window ? new window.VRFrameData() : null;
 
-    if (navigator.getVRDisplays) {
-        navigator.getVRDisplays().then(displays => {
-            this.vrDisplays = displays;
-            if (displays.length > 0) {
-                this.vrDisplay = displays[0];
-            } else {
-                if (this.onError) this.onError('HMD not available');
-            }
-        }).catch(function () {
-            console.warn('THREE.VREffect: Unable to get VR Displays');
-        });
+        if (navigator.getVRDisplays) {
+            navigator.getVRDisplays().then(displays => {
+                this.vrDisplays = displays;
+                if (displays.length > 0) {
+                    this.vrDisplay = displays[0];
+                } else {
+                    if (this.onError) this.onError('HMD not available');
+                }
+            }).catch(function () {
+                console.warn('THREE.VREffect: Unable to get VR Displays');
+            });
+        }
+
+        //
+
+        this.isPresenting = false;
+
+
+        this.rendererSize = this.renderer.getSize();
+        this.rendererUpdateStyle = false;
+        this.rendererPixelRatio = this.renderer.getPixelRatio();
+
+        this.canvas = this.renderer.domElement;
+        this.defaultLeftBounds = [0.0, 0.0, 0.5, 1.0];
+        this.defaultRightBounds = [0.5, 0.0, 0.5, 1.0];
+        this.autoSubmitFrame = true;
+
+        this.cameraL = new THREE.PerspectiveCamera();
+        this.cameraL.layers.enable(1);
+
+        this.cameraR = new THREE.PerspectiveCamera();
+        this.cameraR.layers.enable(2);
+
+        this.poseOrientation = new THREE.Quaternion();
+        this.posePosition = new THREE.Vector3()
+
+        window.addEventListener('vrdisplaypresentchange', this.onVRDisplayPresentChange.bind(this), false);
     }
-
-    //
-
-    this.isPresenting = false;
-
-
-    this.rendererSize = this.renderer.getSize();
-    this.rendererUpdateStyle = false;
-    this.rendererPixelRatio = this.renderer.getPixelRatio();
-
-    this.canvas = this.renderer.domElement;
-    this.defaultLeftBounds = [0.0, 0.0, 0.5, 1.0];
-    this.defaultRightBounds = [0.5, 0.0, 0.5, 1.0];
-    this.autoSubmitFrame = true;
-
-    this.cameraL = new THREE.PerspectiveCamera();
-    this.cameraL.layers.enable(1);
-
-    this.cameraR = new THREE.PerspectiveCamera();
-    this.cameraR.layers.enable(2);
-
-    this.poseOrientation = new THREE.Quaternion();
-    this.posePosition = new THREE.Vector3()
-
-    window.addEventListener('vrdisplaypresentchange', this.onVRDisplayPresentChange.bind(this), false);
-}
 
     get VRDisplay() {
         return this.vrDisplay;
@@ -263,6 +265,7 @@ class VREffect {
                 this.renderer.setViewport(this.renderRectL.x, this.renderRectL.y, this.renderRectL.width, this.renderRectL.height);
                 this.renderer.setScissor(this.renderRectL.x, this.renderRectL.y, this.renderRectL.width, this.renderRectL.height);
             }
+            if (this.beforeRenderL !== null) this.beforeRenderL();
             this.renderer.render(scene, this.cameraL, renderTarget, forceClear);
 
             // render right eye
@@ -273,6 +276,7 @@ class VREffect {
                 this.renderer.setViewport(this.renderRectR.x, this.renderRectR.y, this.renderRectR.width, this.renderRectR.height);
                 this.renderer.setScissor(this.renderRectR.x, this.renderRectR.y, this.renderRectR.width, this.renderRectR.height);
             }
+            if (this.beforeRenderR !== null) this.beforeRenderR();
             this.renderer.render(scene, this.cameraR, renderTarget, forceClear);
 
             if (renderTarget) {
