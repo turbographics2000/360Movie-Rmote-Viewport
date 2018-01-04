@@ -99,7 +99,7 @@ window.addEventListener('resize', onResize);
 function onResize(evt) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    stereoEffect.setSize(window.innerWidth, window.innerHeight);
+    //stereoEffect.setSize(window.innerWidth, window.innerHeight);
     anaglyphEffect.setSize(window.innerWidth, window.innerHeight);
 }
 
