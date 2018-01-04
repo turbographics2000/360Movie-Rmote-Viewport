@@ -76,9 +76,9 @@ float dev( float c ) {
 
 void main() {
     vec2 uv = vUv;
-    uv.u *= repeat;
-    uv.v += offset;
     vec4 colorL = lin( texture2D( mapLeft, uv ) );
+    uv.x *= repeat;
+    uv.y += offset;
     vec4 colorR = lin( texture2D( mapRight, uv ) );
     vec3 color = clamp(colorMatrixLeft * colorL.rgb + colorMatrixRight * colorR.rgb, 0., 1. );
     gl_FragColor = vec4(dev( color.r ), dev( color.g ), dev( color.b ), max( colorL.a, colorR.a ));
