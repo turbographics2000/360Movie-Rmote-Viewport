@@ -48,7 +48,7 @@ function setup(video) {
     texture.magFilter = THREE.LinearFilter;
     texture.format = THREE.RGBFormat;
     texture.repeat.y = 0.5;
-    const textureR = THREE.VideoTexture(video);
+    const textureR = new THREE.VideoTexture(video);
     textureR.repeat.y = 0.5;
     textureR.offset.y = 0.5;
     anaglyphEffect = new THREE.AnaglyphEffect(renderer, null, null, texture, textureR);
