@@ -54,7 +54,7 @@ function setup(video) {
     textureR.format = THREE.RGBFormat;
     textureR.repeat.y = 0.5;
     textureR.offset.y = 0.5;
-    anaglyphEffect = new THREE.AnaglyphEffect(renderer, null, null, texture, textureR);
+    anaglyphEffect = new THREE.AnaglyphEffect(renderer);
     anaglyphEffect.setSize(width, height);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geometry, material);
