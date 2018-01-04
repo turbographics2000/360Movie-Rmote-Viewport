@@ -9,7 +9,7 @@ let renderer = null;
 let scene = null;
 let texture = null;
 let camera = null;
-const renderingTypes = ['normal', 'stereo', 'anaglyph'];
+const renderingTypes = ['normal', 'anaglyph'];
 let renderingTypeIndex = 0;
 let width = window.innerWidth;
 let height = window.innerHeight;
@@ -22,7 +22,7 @@ let isVRPresenting = false;
 
 window.onkeydown = evt => {
     if(evt.code === 'KeyS') {
-        renderingTypeIndex = (renderingTypeIndex + 1) % 3;
+        renderingTypeIndex = (renderingTypeIndex + 1) % 2;
         onResize();
     } else if(evt.code === 'KeyF') {
         isVRPresenting = !isVRPresenting;
@@ -34,10 +34,8 @@ function setup(video) {
     const width = window.innerWidth;
     const height = window.innerHeight;
     renderer = new THREE.WebGLRenderer({});
-    stereoEffect = new THREE.StereoEffect(renderer);
-    stereoEffect.setSize(width, height);
-    anaglyphEffect = new THREE.AnaglyphEffect(renderer);
-    anaglyphEffect.setSize(width, height);
+    //stereoEffect = new THREE.StereoEffect(renderer);
+    //stereoEffect.setSize(width, height);
     renderer.domElement.style.display = 'inherit';
     document.body.appendChild(renderer.domElement);
     scene = new THREE.Scene();
@@ -50,6 +48,11 @@ function setup(video) {
     texture.magFilter = THREE.LinearFilter;
     texture.format = THREE.RGBFormat;
     texture.repeat.y = 0.5;
+    const textureR = THREE.VideoTexture(video);
+    textureR.repeat.y = 0.5;
+    textureR.offset.y = 0.5;
+    anaglyphEffect = new THREE.AnaglyphEffect(renderer, null, null, texture, textureR);
+    anaglyphEffect.setSize(width, height);
     const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
