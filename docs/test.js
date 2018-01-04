@@ -89,7 +89,7 @@ function render() {
                 stereoEffect.render(scene, camera);
                 break;
             case 'anaglyph':
-                anaglyphEffect.render(scene, camera);
+                anaglyphEffect.render(scene, camera, texture);
                 break;
         }
     }
