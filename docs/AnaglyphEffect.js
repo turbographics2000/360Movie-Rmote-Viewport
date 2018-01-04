@@ -6,10 +6,7 @@
  */
 
 class AnaglyphEffect {
-    constructor(renderer, width = 512, height = 512, textureL, textureR) {
-        if((textureL && !textureR) || (!textureL && textureR)) {
-            throw new Error('texture error');
-        }
+    constructor(renderer, width = 512, height = 512, texture) {
         this.renderer = renderer;
         // Matrices generated with angler.js https://github.com/tschw/angler.js/
         // (in column-major element order, as accepted by WebGL)
@@ -37,14 +34,16 @@ class AnaglyphEffect {
             format: THREE.RGBAFormat
         };
         
-        if(!textureL) {    
+        if(!texture) {    
             this._renderTargetL = new THREE.WebGLRenderTarget(width, height, _params);
             this._renderTargetR = new THREE.WebGLRenderTarget(width, height, _params);
         }
         const _material = new THREE.ShaderMaterial({
             uniforms: {
-                mapLeft: { value: textureL || this._renderTargetL.texture },
-                mapRight: { value: textureR || this._renderTargetR.texture },
+                mapLeft: { value: texture || this._renderTargetL.texture },
+                mapRight: { value: texture || this._renderTargetR.texture },
+                repeat: { value: texuture ? 0.5 : 1 },
+                offset: { value: texuture ? 0.5 : 0 },
                 colorMatrixLeft: { value: this.colorMatrixLeft },
                 colorMatrixRight: { value: this.colorMatrixRight }
             },
@@ -57,6 +56,8 @@ void main() {
             fragmentShader: `
 uniform sampler2D mapLeft;
 uniform sampler2D mapRight;
+uniform float repeat;
+uniform float offset;
 varying vec2 vUv;
 uniform mat3 colorMatrixLeft;
 uniform mat3 colorMatrixRight;
@@ -75,6 +76,8 @@ float dev( float c ) {
 
 void main() {
     vec2 uv = vUv;
+    uv.u *= repeat;
+    uv.v += offset;
     vec4 colorL = lin( texture2D( mapLeft, uv ) );
     vec4 colorR = lin( texture2D( mapRight, uv ) );
     vec3 color = clamp(colorMatrixLeft * colorL.rgb + colorMatrixRight * colorR.rgb, 0., 1. );
