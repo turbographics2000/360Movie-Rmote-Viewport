@@ -61,7 +61,7 @@ function vrEffectError(err) {
 }
 
 function beforeRenderL() {
-    texture.offset.y = 0.5;
+    texture.offset.y = 0;
     
 }
 
