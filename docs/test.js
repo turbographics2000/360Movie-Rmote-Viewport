@@ -43,7 +43,7 @@ function setup(video) {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75 / 2, width / height, 0.1, 10000);
     vrControls = new THREE.VRControls(camera);
-    vrEffect   = new THREE.VREffect(renderer);
+    vrEffect   = new THREE.VREffect(renderer, vrEffectError, beforeRenderL, beforeRenderR);
     const geometry = new THREE.SphereBufferGeometry(100, 32, 32);
     texture = new THREE.VideoTexture(video);
     texture.minFilter = THREE.LinearFilter;
@@ -54,6 +54,19 @@ function setup(video) {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
     render();
+}
+
+function vrEffectError(err) {
+    console.log(err);
+}
+
+function beforeRenderL() {
+    texture.offset.y = 0.5;
+    
+}
+
+function beforeRenderR() {
+    texture.offset.y = 0.5;
 }
 
 function render() {
