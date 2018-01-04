@@ -42,8 +42,8 @@ class AnaglyphEffect {
             uniforms: {
                 mapLeft: { value: texture || this._renderTargetL.texture },
                 mapRight: { value: texture || this._renderTargetR.texture },
-                repeat: { value: texuture ? 0.5 : 1 },
-                offset: { value: texuture ? 0.5 : 0 },
+                repeat: { value: texture ? 0.5 : 1 },
+                offset: { value: texture ? 0.5 : 0 },
                 colorMatrixLeft: { value: this.colorMatrixLeft },
                 colorMatrixRight: { value: this.colorMatrixRight }
             },
