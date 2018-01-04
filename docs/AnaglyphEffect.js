@@ -6,7 +6,10 @@
  */
 
 class AnaglyphEffect {
-    constructor(renderer, width = 512, height = 512) {
+    constructor(renderer, width = 512, height = 512, textureL, textureR) {
+        if((textureL && !textureR) || (!textureL && textureR)) {
+            throw new Error('texture error');
+        }
         this.renderer = renderer;
         // Matrices generated with angler.js https://github.com/tschw/angler.js/
         // (in column-major element order, as accepted by WebGL)
@@ -33,12 +36,15 @@ class AnaglyphEffect {
             magFilter: THREE.NearestFilter,
             format: THREE.RGBAFormat
         };
-        this._renderTargetL = new THREE.WebGLRenderTarget(width, height, _params);
-        this._renderTargetR = new THREE.WebGLRenderTarget(width, height, _params);
+        
+        if(!textureL) {    
+            this._renderTargetL = new THREE.WebGLRenderTarget(width, height, _params);
+            this._renderTargetR = new THREE.WebGLRenderTarget(width, height, _params);
+        }
         const _material = new THREE.ShaderMaterial({
             uniforms: {
-                mapLeft: { value: this._renderTargetL.texture },
-                mapRight: { value: this._renderTargetR.texture },
+                mapLeft: { value: textureL || this._renderTargetL.texture },
+                mapRight: { value: textureR || this._renderTargetR.texture },
                 colorMatrixLeft: { value: this.colorMatrixLeft },
                 colorMatrixRight: { value: this.colorMatrixRight }
             },
