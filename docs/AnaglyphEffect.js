@@ -6,7 +6,7 @@
  */
 
 class AnaglyphEffect {
-    constructor(renderer, width = 512, height = 512, texture) {
+    constructor(renderer, width = 512, height = 512) {
         this.renderer = renderer;
         // Matrices generated with angler.js https://github.com/tschw/angler.js/
         // (in column-major element order, as accepted by WebGL)
@@ -34,16 +34,12 @@ class AnaglyphEffect {
             format: THREE.RGBAFormat
         };
         
-        if(!texture) {    
-            this._renderTargetL = new THREE.WebGLRenderTarget(width, height, _params);
-            this._renderTargetR = new THREE.WebGLRenderTarget(width, height, _params);
-        }
+        this._renderTargetL = new THREE.WebGLRenderTarget(width, height, _params);
+        this._renderTargetR = new THREE.WebGLRenderTarget(width, height, _params);
         const _material = new THREE.ShaderMaterial({
             uniforms: {
-                mapLeft: { value: texture || this._renderTargetL.texture },
-                mapRight: { value: texture || this._renderTargetR.texture },
-                repeat: { value: texture ? 0.5 : 1 },
-                offset: { value: texture ? 0.5 : 0 },
+                mapLeft: { value: this._renderTargetL.texture },
+                mapRight: { value: this._renderTargetR.texture },
                 colorMatrixLeft: { value: this.colorMatrixLeft },
                 colorMatrixRight: { value: this.colorMatrixRight }
             },
@@ -56,8 +52,6 @@ void main() {
             fragmentShader: `
 uniform sampler2D mapLeft;
 uniform sampler2D mapRight;
-uniform float repeat;
-uniform float offset;
 varying vec2 vUv;
 uniform mat3 colorMatrixLeft;
 uniform mat3 colorMatrixRight;
@@ -77,8 +71,6 @@ float dev( float c ) {
 void main() {
     vec2 uv = vUv;
     vec4 colorL = lin( texture2D( mapLeft, uv ) );
-    uv.x *= repeat;
-    uv.y += offset;
     vec4 colorR = lin( texture2D( mapRight, uv ) );
     vec3 color = clamp(colorMatrixLeft * colorL.rgb + colorMatrixRight * colorR.rgb, 0., 1. );
     gl_FragColor = vec4(dev( color.r ), dev( color.g ), dev( color.b ), max( colorL.a, colorR.a ));
@@ -92,17 +84,20 @@ void main() {
     setSize(width, height) {
         this.renderer.setSize(width, height);
         const pixelRatio = renderer.getPixelRatio();
-        if(this._renderTargetL) {
-            this._renderTargetL.setSize(width * pixelRatio, height * pixelRatio);
-            this._renderTargetR.setSize(width * pixelRatio, height * pixelRatio);
-        }
+        this._renderTargetL.setSize(width * pixelRatio, height * pixelRatio);
+        this._renderTargetR.setSize(width * pixelRatio, height * pixelRatio);
     }
 
-    render(scene, camera) {
+    render(scene, camera, texture) {
         scene.updateMatrixWorld();
         if (camera.parent === null) camera.updateMatrixWorld();
         this._stereo.update(camera);
-        if(this._renderTargetL) {
+        if(texture) {
+            texture.offset.y = 0;
+            this.renderer.render(scene, camera, this._renderTargetL, true);
+            texture.offset.y = 0.5;
+            this.renderer.render(scene, camera, this._renderTargetR, true);
+        } else {
             this.renderer.render(scene, this._stereo.cameraL, this._renderTargetL, true);
             this.renderer.render(scene, this._stereo.cameraR, this._renderTargetR, true);
         }
